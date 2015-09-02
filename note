@@ -1,0 +1,1 @@
+g++ -o send send.cpp RCSwitch.cpp util.cpp -std=c++0x -pthread
