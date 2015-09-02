@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <iostream>
+#include <unistd.h> // usleep
 
 using namespace std;
 
@@ -16,6 +17,7 @@ int main(int argc, char *argv[]) {
     mySwitch.enableReceive(1);
     
     while(1) {
+      cout << "loop:" << mySwitch.getReceivedValue() << endl; 
       if (mySwitch.available()) {
 
         int value = mySwitch.getReceivedValue();

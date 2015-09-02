@@ -6,3 +6,5 @@ void pinMode(int pin, int mode);
 void attachInterrupt(int pin, voidFuncPtr handler, int mode);
 void detachInterrupt(int pin);
 unsigned long micros(void);
+
+void mylog();

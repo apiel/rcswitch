@@ -56,8 +56,8 @@ void digitalWrite(int pin, int value)
 int digitalRead(int pin) // pin not used
 {
   string line;
-  //ifstream myfile ("/sys/class/gpio_sw/PA1/data");
-  ifstream myfile ("test");
+  ifstream myfile ("/sys/class/gpio_sw/PA1/data");
+  //ifstream myfile ("test");
   if (myfile.is_open())
   {
     getline (myfile,line);
@@ -77,9 +77,9 @@ void tAttachInterrupt(voidFuncPtr handler)
   while(loopInterrupt) {
     val2 = digitalRead(0);
     if (val != val2) {
-      cout << "change" << endl;
+      //cout << "change" << endl;
       val = val2;
-      handler;
+      handler();
     }
     //usleep(1);
   }
@@ -110,4 +110,9 @@ unsigned long micros(void)
     micros = t.tv_sec * 1000000L + t.tv_usec;
     
     return micros; // should be the time in microsecond
+}
+
+void mylog() 
+{
+cout << "yo" << endl;
 }
