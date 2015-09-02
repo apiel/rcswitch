@@ -7,6 +7,7 @@
 #include <string> // readfile
 #include <iostream>
 #include <thread>  
+//#include <unistd.h> // usleep
 //#include <pthread.h>
 
 using namespace std;
@@ -80,6 +81,7 @@ void tAttachInterrupt(voidFuncPtr handler)
       val = val2;
       handler;
     }
+    //usleep(1);
   }
 }
 

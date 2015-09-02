@@ -34,6 +34,7 @@ int main(int argc, char *argv[]) {
 
         mySwitch.resetAvailable();
       }
+      usleep(100000); // 0.1sec
     }
     cout << "finish!!" << endl;
 	return 0;
