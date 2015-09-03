@@ -31,14 +31,24 @@ void rx(int pin) {
   mySwitch.resetAvailable();
 }
 
-void tx(int pin, int code, int protocol, int bit, int repetition) {
+void tx(int pin, int code, int protocol, int repetition, int bit) {
     RCSwitch mySwitch = RCSwitch();
 	mySwitch.setRepeatTransmit(repetition);
 	mySwitch.enableTransmit(pin);
     mySwitch.setProtocol(protocol);
-    mySwitch.send(code, bit);
+	mySwitch.send(code, bit);
 
     cout << "Send code " << code << endl;
+}
+
+void tx(int pin, char* sCodeWord, int protocol, int repetition) {
+    RCSwitch mySwitch = RCSwitch();
+	mySwitch.setRepeatTransmit(repetition);
+	mySwitch.enableTransmit(pin);
+    mySwitch.setProtocol(protocol);
+	mySwitch.send(sCodeWord);
+
+    cout << "Send code " << sCodeWord << endl;
 }
 
 int main(int argc, char *argv[]) {
@@ -50,6 +60,7 @@ int main(int argc, char *argv[]) {
   int pin = 1;
   int repetition = 20;
   bool run = true;
+  char sCodeWord[128] = "111111111";
   opterr = 0;
   
   while ((c = getopt(argc, argv, "hx:p:c:b:i:r:")) != -1) {
@@ -60,7 +71,7 @@ int main(int argc, char *argv[]) {
         cout << "rx: receive mode (default)" << endl;
         cout << "tx: transmit mode. This mode can get extra parameters -c [code] -b [bit] -p [protocol] -r [repetition]." << endl;
         cout << "code: code to transmit eg.: " << code << endl;
-        cout << "bit: length of the code to transmit, default: " << bit << endl;
+        cout << "bit: length of the code to transmit or 0 for binary code, default: " << bit << endl;
         cout << "protocol: protocol used to transmit (1, 2 or 3), default: " << protocol << endl;
 		cout << "repetition: how many time the code is transmit, default: " << repetition << endl;
         cout << "gpio: the pin connected to your transmiter or receiver, default: " << pin << " (for orangePi, 1 is the pin 11, GPIO 17)" << endl << endl;
@@ -73,6 +84,7 @@ int main(int argc, char *argv[]) {
         protocol = atoi(optarg);
         break;
       case 'c': // code
+		strcpy(sCodeWord, optarg);
         code = atoi(optarg);
         break;
       case 'b': // bit
@@ -100,7 +112,12 @@ int main(int argc, char *argv[]) {
   }
   if (run) {
 	  if (x == 0) {
-		tx(pin, code, protocol, bit, repetition);
+		if (bit == 0) {
+			tx(pin, sCodeWord, protocol, repetition);
+		}
+		else {
+			tx(pin, code, protocol, repetition, bit);
+		}
 	  }
 	  else {
 		rx(pin);
