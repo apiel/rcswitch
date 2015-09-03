@@ -15,6 +15,7 @@ using namespace std;
 bool loopInterrupt = false;
 
 const char* pathGpioData = "/sys/class/gpio_sw/PA%d/data";
+const char* pathGpioPinMode = "/sys/class/gpio_sw/PA%d/cfg";
 
 
 void delayMicrosecondsHard (unsigned int howLong)
@@ -46,9 +47,20 @@ void delayMicroseconds (unsigned int howLong)
   }
 }
 
+char * getPathGpioPinMode(int pin)
+{
+	char * fName = new char[128];
+	sprintf(fName, pathGpioPinMode, pin);
+	
+	return fName;
+}
+
 void pinMode(int pin, int mode)
 {
-
+	ofstream myfile;
+	myfile.open(getPathGpioPinMode(pin));
+	myfile << mode;
+	myfile.close();
 }
 
 char * getPathGpioData(int pin)
@@ -61,7 +73,10 @@ char * getPathGpioData(int pin)
 
 void digitalWrite(int pin, int value)
 {
-  
+	ofstream myfile;
+	myfile.open(getPathGpioData(pin));
+	myfile << value;
+	myfile.close();
 }
 
 int digitalRead(int pin)
@@ -80,14 +95,14 @@ int digitalRead(int pin)
   return atoi(line.c_str());
 }
 
-void tAttachInterrupt(voidFuncPtr handler)
+void tAttachInterrupt(voidFuncPtr handler, int pin)
 {
   int val2 = 0;
-  int val = digitalRead(1);
+  int val = digitalRead(pin);
   cout << "start loop" << endl;
   loopInterrupt = true;
   while(loopInterrupt) {
-    val2 = digitalRead(1);
+    val2 = digitalRead(pin);
     if (val != val2) {
       //cout << "change" << endl;
       val = val2;
@@ -116,7 +131,8 @@ void tAttachInterrupt(voidFuncPtr handler)
 // to trigger the interrupt whenever the pin changes value
 void attachInterrupt(int pin, voidFuncPtr handler, int mode)
 {
-  thread tAttInt (tAttachInterrupt, handler);
+  pinMode(pin, INPUT);
+  thread tAttInt (tAttachInterrupt, handler, pin);
   tAttInt.detach();
   cout << "end attachInt" << endl;
 }
