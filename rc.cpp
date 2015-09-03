@@ -33,29 +33,25 @@ void rx(int pin) {
   mySwitch.resetAvailable();
 }
 
-void tx(int pin, int code, int protocol, int repetition, int delay, int bit) {
-    RCSwitch mySwitch = RCSwitch();
+RCSwitch initTx(int pin, int protocol, int repetition, int delay)
+{
+	RCSwitch mySwitch = RCSwitch();
 	mySwitch.setRepeatTransmit(repetition);
 	mySwitch.enableTransmit(pin);
     mySwitch.setProtocol(protocol);
 	if (delay > 0) {
 		mySwitch.setPulseLength(delay);
 	}
-	mySwitch.send(code, bit);
+	return mySwitch;
+}
 
+void tx(RCSwitch mySwitch, int code, int bit) {
+	mySwitch.send(code, bit);
     cout << "Send code " << code << endl;
 }
 
-void tx(int pin, char* sCodeWord, int protocol, int repetition, int delay) {
-    RCSwitch mySwitch = RCSwitch();
-	mySwitch.setRepeatTransmit(repetition);
-	mySwitch.enableTransmit(pin);
-    mySwitch.setProtocol(protocol);
-	if (delay > 0) {
-		mySwitch.setPulseLength(delay);
-	}
+void tx(RCSwitch mySwitch, char* sCodeWord) {
 	mySwitch.send(sCodeWord);
-
     cout << "Send code " << sCodeWord << endl;
 }
 
@@ -125,11 +121,12 @@ int main(int argc, char *argv[]) {
   }
   if (run) {
 	  if (x == 0) {
+		RCSwitch mySwitch = initTx(pin, protocol, repetition, delay);
 		if (bit == 0) {
-			tx(pin, sCodeWord, protocol, repetition, delay);
+			tx(mySwitch, sCodeWord);
 		}
 		else {
-			tx(pin, code, protocol, repetition, delay, bit);
+			tx(mySwitch, code, bit);
 		}
 	  }
 	  else {
