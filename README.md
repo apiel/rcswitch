@@ -14,11 +14,11 @@ You can change the path of the gpio with setPathGpioData and setPathGpioPinMode.
 
 RC is a little app to receive and transmit a RF code.
 
-To receive just run `./rc`
+To receive, run `./rc`
 
-It will output json date like: `{"code":234123,"bit":24"protocol":1"delay":180}`
+It will output json data like: `{"code":234123,"bit":24"protocol":1"delay":180}`
 
-The to reproduce this code run `./rc -c 234123 -b 24 -p 1 -d 180`
+The to reproduce this code run `./rc -x tx -c 234123 -b 24 -p 1 -d 180`
 
 To compile:
 ```
