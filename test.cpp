@@ -1,8 +1,3 @@
-/*
- Usage: ./send <systemCode> <unitCode> <command>
- Command is 0 for OFF and 1 for ON
- */
-
 #include "RCSwitch.h"
 #include <stdlib.h>
 #include <stdio.h>
