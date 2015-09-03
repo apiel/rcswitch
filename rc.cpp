@@ -26,26 +26,34 @@ void rx(int pin) {
     cout << mySwitch.getReceivedBitlength();
     cout << "\"protocol\":";
     cout << mySwitch.getReceivedProtocol();
+    cout << "\"delay\":";
+    cout << mySwitch.getReceivedDelay();
     cout << "}" << endl;
   }
   mySwitch.resetAvailable();
 }
 
-void tx(int pin, int code, int protocol, int repetition, int bit) {
+void tx(int pin, int code, int protocol, int repetition, int delay, int bit) {
     RCSwitch mySwitch = RCSwitch();
 	mySwitch.setRepeatTransmit(repetition);
 	mySwitch.enableTransmit(pin);
     mySwitch.setProtocol(protocol);
+	if (delay > 0) {
+		mySwitch.setPulseLength(delay);
+	}
 	mySwitch.send(code, bit);
 
     cout << "Send code " << code << endl;
 }
 
-void tx(int pin, char* sCodeWord, int protocol, int repetition) {
+void tx(int pin, char* sCodeWord, int protocol, int repetition, int delay) {
     RCSwitch mySwitch = RCSwitch();
 	mySwitch.setRepeatTransmit(repetition);
 	mySwitch.enableTransmit(pin);
     mySwitch.setProtocol(protocol);
+	if (delay > 0) {
+		mySwitch.setPulseLength(delay);
+	}
 	mySwitch.send(sCodeWord);
 
     cout << "Send code " << sCodeWord << endl;
@@ -58,21 +66,23 @@ int main(int argc, char *argv[]) {
   int code = 12345;
   int bit = 24;
   int pin = 1;
+  int delay = 0;
   int repetition = 20;
   bool run = true;
   char sCodeWord[128] = "111111111";
   opterr = 0;
   
-  while ((c = getopt(argc, argv, "hx:p:c:b:i:r:")) != -1) {
+  while ((c = getopt(argc, argv, "hx:p:c:b:i:r:d:")) != -1) {
     switch (c) {
       case 'h':
 	    run = false;
-        cout << argv[0] << "-x [rx|tx] -c [code] -b [bit] -p [protocol] -r [repetition] -i [gpio]" << endl << endl;
+        cout << argv[0] << "-x [rx|tx] -c [code] -b [bit] -p [protocol] -r [repetition] -d [delay] -i [gpio]" << endl << endl;
         cout << "rx: receive mode (default)" << endl;
-        cout << "tx: transmit mode. This mode can get extra parameters -c [code] -b [bit] -p [protocol] -r [repetition]." << endl;
+        cout << "tx: transmit mode. This mode can get extra parameters -c [code] -b [bit] -p [protocol] -r [repetition] -d [delay]." << endl;
         cout << "code: code to transmit eg.: " << code << endl;
         cout << "bit: length of the code to transmit or 0 for binary code, default: " << bit << endl;
         cout << "protocol: protocol used to transmit (1, 2 or 3), default: " << protocol << endl;
+		cout << "delay: pulse length or 0 for using the default pulse length protocol." << endl;
 		cout << "repetition: how many time the code is transmit, default: " << repetition << endl;
         cout << "gpio: the pin connected to your transmiter or receiver, default: " << pin << " (for orangePi, 1 is the pin 11, GPIO 17)" << endl << endl;
         
@@ -90,6 +100,9 @@ int main(int argc, char *argv[]) {
       case 'b': // bit
         bit = atoi(optarg);
         break;
+	  case 'd': // bit
+        delay = atoi(optarg);
+        break;
       case 'r': // bit
         repetition = atoi(optarg);
         break;
@@ -99,7 +112,7 @@ int main(int argc, char *argv[]) {
       case '?':
         if (optopt == 'x')
           fprintf(stderr, "Option -%c requires an argument: rx to receive or tx to transmit.\n", optopt);
-        else if (optopt == 'p' || optopt == 'c' || optopt == 'b' || optopt == 'i' || optopt == 'r')
+        else if (optopt == 'p' || optopt == 'c' || optopt == 'b' || optopt == 'i' || optopt == 'r' || optopt == 'd')
           fprintf(stderr, "Option -%c requires an argument.\n", optopt);
         else if (isprint(optopt))
           fprintf(stderr, "Unknown option -%c.\n", optopt);
@@ -113,10 +126,10 @@ int main(int argc, char *argv[]) {
   if (run) {
 	  if (x == 0) {
 		if (bit == 0) {
-			tx(pin, sCodeWord, protocol, repetition);
+			tx(pin, sCodeWord, protocol, repetition, delay);
 		}
 		else {
-			tx(pin, code, protocol, repetition, bit);
+			tx(pin, code, protocol, repetition, delay, bit);
 		}
 	  }
 	  else {
