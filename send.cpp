@@ -17,7 +17,7 @@ int main(int argc, char *argv[]) {
     mySwitch.enableReceive(1);
     
     while(1) {
-      cout << "loop:" << mySwitch.getReceivedValue() << endl; 
+      //cout << "loop:" << mySwitch.getReceivedValue() << endl; 
       if (mySwitch.available()) {
 
         int value = mySwitch.getReceivedValue();

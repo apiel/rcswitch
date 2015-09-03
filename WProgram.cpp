@@ -1,4 +1,4 @@
-#include "util.h"
+#include "WProgram.h"
 
 #include <sys/time.h>
 #include <time.h>
@@ -7,12 +7,15 @@
 #include <string> // readfile
 #include <iostream>
 #include <thread>  
+//#include <sys/inotify.h>
 //#include <unistd.h> // usleep
-//#include <pthread.h>
 
 using namespace std;
 
 bool loopInterrupt = false;
+
+const char* pathGpioData = "/sys/class/gpio_sw/PA%d/data";
+
 
 void delayMicrosecondsHard (unsigned int howLong)
 {
@@ -31,7 +34,7 @@ void delayMicroseconds (unsigned int howLong)
 {
   struct timespec sleeper ;
 
-  /**/ if (howLong ==   0)
+  if (howLong ==   0)
     return ;
   else if (howLong  < 100)
     delayMicrosecondsHard (howLong) ;
@@ -48,15 +51,25 @@ void pinMode(int pin, int mode)
 
 }
 
+char * getPathGpioData(int pin)
+{
+	char * fName = new char[128];
+	sprintf(fName, pathGpioData, pin);
+	
+	return fName;
+}
+
 void digitalWrite(int pin, int value)
 {
   
 }
 
-int digitalRead(int pin) // pin not used
+int digitalRead(int pin)
 {
+  
   string line;
-  ifstream myfile ("/sys/class/gpio_sw/PA1/data");
+  
+  ifstream myfile(getPathGpioData(pin));
   //ifstream myfile ("test");
   if (myfile.is_open())
   {
@@ -67,15 +80,14 @@ int digitalRead(int pin) // pin not used
   return atoi(line.c_str());
 }
 
-//void *tAttachInterrupt(void* /*voidFuncPtr handler*/)
 void tAttachInterrupt(voidFuncPtr handler)
 {
   int val2 = 0;
-  int val = digitalRead(0);
+  int val = digitalRead(1);
   cout << "start loop" << endl;
   loopInterrupt = true;
   while(loopInterrupt) {
-    val2 = digitalRead(0);
+    val2 = digitalRead(1);
     if (val != val2) {
       //cout << "change" << endl;
       val = val2;
@@ -85,14 +97,27 @@ void tAttachInterrupt(voidFuncPtr handler)
   }
 }
 
+/*
+void tAttachInterrupt(voidFuncPtr handler)
+{
+	int wd;
+	int fd = inotify_init();
+	loopInterrupt = true;
+	while(loopInterrupt) {
+		//cout << "wait" << endl;
+		wd = inotify_add_watch( fd, "/sys/class/gpio_sw/PA1/data", IN_MODIFY);
+		//cout << "change" << endl;
+		handler();
+	}
+	inotify_rm_watch( fd, wd );
+	//cout << "end watch" << endl;
+}*/
+
 // to trigger the interrupt whenever the pin changes value
 void attachInterrupt(int pin, voidFuncPtr handler, int mode)
 {
   thread tAttInt (tAttachInterrupt, handler);
   tAttInt.detach();
-  //pthread_t thread;
-  //pthread_create( &thread, NULL, tAttachInterrupt, NULL);
-  /////tAttachInterrupt();
   cout << "end attachInt" << endl;
 }
 

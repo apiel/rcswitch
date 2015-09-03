@@ -28,17 +28,13 @@
 #ifndef _RCSwitch_h
 #define _RCSwitch_h
 
-#include "util.h"
-#define NULL 0
-#define OUTPUT 1
-#define INPUT 0
-#define HIGH 1
-#define LOW 0
-#define CHANGE 1
-typedef bool boolean;
-typedef int byte;
-//#define RCSwitchDisableReceiving 1
-
+#if defined(ARDUINO) && ARDUINO >= 100
+    #include "Arduino.h"
+#elif defined(ENERGIA) // LaunchPad, FraunchPad and StellarPad specific
+    #include "Energia.h"	
+#else
+    #include "WProgram.h"
+#endif
 
 // At least for the ATTiny X4/X5, receiving has to be disabled due to
 // missing libm depencies (udivmodhi4)

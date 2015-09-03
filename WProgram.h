@@ -1,3 +1,12 @@
+#define NULL 0
+#define OUTPUT 1
+#define INPUT 0
+#define HIGH 1
+#define LOW 0
+#define CHANGE 1
+typedef bool boolean;
+typedef int byte;
+
 typedef void (*voidFuncPtr)(void);
 
 void delayMicroseconds(unsigned int howLong);
