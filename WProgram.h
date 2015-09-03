@@ -17,5 +17,3 @@ void detachInterrupt(int pin);
 unsigned long micros(void);
 void setPathGpioData(char * path);
 void setPathGpioPinMode(char * path);
-
-void mylog();

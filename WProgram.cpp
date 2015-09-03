@@ -108,7 +108,7 @@ void tAttachInterrupt(voidFuncPtr handler, int pin)
 {
   int val2 = 0;
   int val = digitalRead(pin);
-  cout << "start loop" << endl;
+  //cout << "start loop" << endl;
   loopInterrupt = true;
   while(loopInterrupt) {
     val2 = digitalRead(pin);
@@ -143,7 +143,7 @@ void attachInterrupt(int pin, voidFuncPtr handler, int mode)
   pinMode(pin, INPUT);
   thread tAttInt (tAttachInterrupt, handler, pin);
   tAttInt.detach();
-  cout << "end attachInt" << endl;
+  //cout << "end attachInt" << endl;
 }
 
 // if implement attach Interrupt with thread, stop attachInterrupt
@@ -160,9 +160,4 @@ unsigned long micros(void)
     micros = t.tv_sec * 1000000L + t.tv_usec;
     
     return micros; // should be the time in microsecond
-}
-
-void mylog() 
-{
-cout << "yo" << endl;
 }
