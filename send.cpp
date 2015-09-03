@@ -14,6 +14,8 @@ using namespace std;
 int main(int argc, char *argv[]) {
     
 	RCSwitch mySwitch = RCSwitch();
+	//char pathGpioData[128] = "/sys/class/gpio_sw/PA%d/data";
+	//setPathGpioData(pathGpioData);
     mySwitch.enableReceive(1);
     
     while(1) {

@@ -7,6 +7,7 @@
 #include <string> // readfile
 #include <iostream>
 #include <thread>  
+#include <cstring>
 //#include <sys/inotify.h>
 //#include <unistd.h> // usleep
 
@@ -14,9 +15,18 @@ using namespace std;
 
 bool loopInterrupt = false;
 
-const char* pathGpioData = "/sys/class/gpio_sw/PA%d/data";
-const char* pathGpioPinMode = "/sys/class/gpio_sw/PA%d/cfg";
+char pathGpioData[128] = "/sys/class/gpio_sw/PA%d/data";
+char pathGpioPinMode[128] = "/sys/class/gpio_sw/PA%d/cfg";
 
+void setPathGpioData(char * path)
+{
+	strcpy(pathGpioData, path);
+}
+
+void setPathGpioPinMode(char * path)
+{
+	strcpy(pathGpioPinMode, path);
+}
 
 void delayMicrosecondsHard (unsigned int howLong)
 {
@@ -85,7 +95,6 @@ int digitalRead(int pin)
   string line;
   
   ifstream myfile(getPathGpioData(pin));
-  //ifstream myfile ("test");
   if (myfile.is_open())
   {
     getline (myfile,line);
