@@ -9,6 +9,7 @@ using namespace std;
 
 void rx(int pin) {
   RCSwitch mySwitch = RCSwitch();
+  pinMode(pin, INPUT);
   mySwitch.enableReceive(pin);
 
   do{
@@ -31,7 +32,12 @@ void rx(int pin) {
 }
 
 void tx(int pin, int code, int protocol, int bit) {
-  
+    RCSwitch mySwitch = RCSwitch();
+	mySwitch.enableTransmit(pin);
+    mySwitch.setProtocol(protocol);
+    mySwitch.send(code, bit);
+
+    cout << "Send code " << code << endl;
 }
 
 int main(int argc, char *argv[]) {
