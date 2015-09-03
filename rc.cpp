@@ -31,8 +31,9 @@ void rx(int pin) {
   mySwitch.resetAvailable();
 }
 
-void tx(int pin, int code, int protocol, int bit) {
+void tx(int pin, int code, int protocol, int bit, int repetition) {
     RCSwitch mySwitch = RCSwitch();
+	mySwitch.setRepeatTransmit(repetition);
 	mySwitch.enableTransmit(pin);
     mySwitch.setProtocol(protocol);
     mySwitch.send(code, bit);
@@ -47,17 +48,21 @@ int main(int argc, char *argv[]) {
   int code = 12345;
   int bit = 24;
   int pin = 1;
+  int repetition = 20;
+  bool run = true;
   opterr = 0;
   
-  while ((c = getopt(argc, argv, "hx:p:c:b:i:")) != -1) {
+  while ((c = getopt(argc, argv, "hx:p:c:b:i:r:")) != -1) {
     switch (c) {
       case 'h':
-        cout << argv[0] << "-x [rx|tx] -c [code] -b [bit] -p [protocol] -i [gpio]" << endl << endl;
+	    run = false;
+        cout << argv[0] << "-x [rx|tx] -c [code] -b [bit] -p [protocol] -r [repetition] -i [gpio]" << endl << endl;
         cout << "rx: receive mode (default)" << endl;
-        cout << "tx: transmit mode. This mode can get extra parameters -c [code] -b [bit] -p [protocol]." << endl;
+        cout << "tx: transmit mode. This mode can get extra parameters -c [code] -b [bit] -p [protocol] -r [repetition]." << endl;
         cout << "code: code to transmit eg.: " << code << endl;
         cout << "bit: length of the code to transmit, default: " << bit << endl;
         cout << "protocol: protocol used to transmit (1, 2 or 3), default: " << protocol << endl;
+		cout << "repetition: how many time the code is transmit, default: " << repetition << endl;
         cout << "gpio: the pin connected to your transmiter or receiver, default: " << pin << " (for orangePi, 1 is the pin 11, GPIO 17)" << endl << endl;
         
         break;
@@ -73,13 +78,16 @@ int main(int argc, char *argv[]) {
       case 'b': // bit
         bit = atoi(optarg);
         break;
+      case 'r': // bit
+        repetition = atoi(optarg);
+        break;
       case 'i':
         pin = atoi(optarg);
         break;
       case '?':
         if (optopt == 'x')
           fprintf(stderr, "Option -%c requires an argument: rx to receive or tx to transmit.\n", optopt);
-        else if (optopt == 'p' || optopt == 'c' || optopt == 'b' || optopt == 'i')
+        else if (optopt == 'p' || optopt == 'c' || optopt == 'b' || optopt == 'i' || optopt == 'r')
           fprintf(stderr, "Option -%c requires an argument.\n", optopt);
         else if (isprint(optopt))
           fprintf(stderr, "Unknown option -%c.\n", optopt);
@@ -90,11 +98,13 @@ int main(int argc, char *argv[]) {
         abort();
     }
   }
-  if (x == 0) {
-    tx(pin, code, protocol, bit);
-  }
-  else {
-    rx(pin);
+  if (run) {
+	  if (x == 0) {
+		tx(pin, code, protocol, bit, repetition);
+	  }
+	  else {
+		rx(pin);
+	  }  
   }
   return 0;
 }
