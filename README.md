@@ -27,10 +27,10 @@ g++ -o  rc rc.cpp RCSwitch.cpp WProgram.cpp -std=c++0x -pthread
 
 Commands:
 ```
-./rc -x [rx|tx] -c [code] -b [bit] -p [protocol] -r [repetition] -d [delay] -i [gpio]
+./rc [-x rx|tx] [-c code] [-b bit] [-p protocol] [-r repetition] [-d delay] [-i gpio]
 
 rx: receive mode (default)
-tx: transmit mode. This mode can get extra parameters -c [code] -b [bit] -p [protocol] -r [repetition] -d [delay].
+tx: transmit mode. This mode can get extra parameters [-c code] [-b bit] [-p protocol] [-r repetition] [-d delay].
 code: code to transmit eg.: 12345
 bit: length of the code to transmit or 0 for binary code, default: 24
 protocol: protocol used to transmit (1, 2 or 3), default: 1
