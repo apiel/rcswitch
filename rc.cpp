@@ -35,6 +35,7 @@ void rx(int pin) {
 
 RCSwitch initTx(int pin, int protocol, int repetition, int delay)
 {
+    pinMode(pin, OUTPUT);
 	RCSwitch mySwitch = RCSwitch();
 	mySwitch.setRepeatTransmit(repetition);
 	mySwitch.enableTransmit(pin);
@@ -68,7 +69,7 @@ int main(int argc, char *argv[]) {
   char sCodeWord[128] = "111111111";
   opterr = 0;
   
-  while ((c = getopt(argc, argv, "hx:p:c:b:i:r:d:")) != -1) {
+  while ((c = getopt(argc, argv, "hsx:p:c:b:i:r:d:")) != -1) {
     switch (c) {
       case 'h':
 	    run = false;
@@ -82,6 +83,9 @@ int main(int argc, char *argv[]) {
 		cout << "repetition: how many time the code is transmit, default: " << repetition << endl;
         cout << "gpio: the pin connected to your transmiter or receiver, default: " << pin << " (for orangePi, 1 is the pin 11, GPIO 17)" << endl << endl;
         
+        break;
+      case 's': // stringPinMode
+        setStringPinMode();
         break;
       case 'x': // rx or tx
         x = strcmp (optarg, "tx");

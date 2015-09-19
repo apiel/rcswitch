@@ -14,9 +14,18 @@
 using namespace std;
 
 bool loopInterrupt = false;
+bool isStringPinMode = false;
+
+const char * strPinModeOutput = "OUT";
+const char * strPinModeInput = "IN";
 
 char pathGpioData[128] = "/sys/class/gpio_sw/PA%d/data";
 char pathGpioPinMode[128] = "/sys/class/gpio_sw/PA%d/cfg";
+
+void setStringPinMode()
+{
+  isStringPinMode = true;
+}
 
 void setPathGpioData(char * path)
 {
@@ -69,7 +78,13 @@ void pinMode(int pin, int mode)
 {
 	ofstream myfile;
 	myfile.open(getPathGpioPinMode(pin));
-	myfile << mode;
+    if (isStringPinMode) {
+      myfile << (mode == INPUT ? strPinModeInput : strPinModeOutput);
+    }
+    else {
+      myfile << mode;
+    }
+	
 	myfile.close();
 }
 
