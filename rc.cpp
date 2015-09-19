@@ -69,11 +69,11 @@ int main(int argc, char *argv[]) {
   char sCodeWord[128] = "111111111";
   opterr = 0;
   
-  while ((c = getopt(argc, argv, "hsx:p:c:b:i:r:d:")) != -1) {
+  while ((c = getopt(argc, argv, "hsx:p:c:b:i:r:d:m:a:")) != -1) {
     switch (c) {
       case 'h':
 	    run = false;
-        cout << argv[0] << " [-x rx|tx] [-c code] [-b bit] [-p protocol] [-r repetition] [-d delay] [-i gpio]" << endl << endl;
+        cout << argv[0] << " [-x rx|tx] [-c code] [-b bit] [-p protocol] [-r repetition] [-d delay] [-i gpio] [-m pathPinMode] [-a pathPinData] [-s]" << endl << endl;
         cout << "rx: receive mode (default)" << endl;
         cout << "tx: transmit mode. This mode can get extra parameters [-c code] [-b bit] [-p protocol] [-r repetition] [-d delay]." << endl;
         cout << "code: code to transmit eg.: " << code << endl;
@@ -81,7 +81,11 @@ int main(int argc, char *argv[]) {
         cout << "protocol: protocol used to transmit (1, 2 or 3), default: " << protocol << endl;
 		cout << "delay: pulse length or 0 for using the default pulse length protocol." << endl;
 		cout << "repetition: how many time the code is transmit, default: " << repetition << endl;
-        cout << "gpio: the pin connected to your transmiter or receiver, default: " << pin << " (for orangePi, 1 is the pin 11, GPIO 17)" << endl << endl;
+        cout << "gpio: the pin connected to your transmiter or receiver, default: " << pin << " (for orangePi, 1 is the pin 11, GPIO 17)" << endl;
+        cout << "pathPinMode: default '/sys/class/gpio_sw/PA%d/cfg', can be as well '/sys/class/gpio/gpio%d/direction'" << endl;
+        cout << "pathPinData: default '/sys/class/gpio_sw/PA%d/data', can be as well '/sys/class/gpio/gpio%d/value'" << endl;
+        cout << "-s to set the pint mode with a string OUT/IN instead of 1/0." << endl;
+        cout << endl;
         
         break;
       case 's': // stringPinMode
@@ -109,10 +113,16 @@ int main(int argc, char *argv[]) {
       case 'i':
         pin = atoi(optarg);
         break;
+      case 'm':
+        setPathGpioPinMode(optarg);
+        break;
+      case 'a':
+        setPathGpioData(optarg);
+        break;
       case '?':
         if (optopt == 'x')
           fprintf(stderr, "Option -%c requires an argument: rx to receive or tx to transmit.\n", optopt);
-        else if (optopt == 'p' || optopt == 'c' || optopt == 'b' || optopt == 'i' || optopt == 'r' || optopt == 'd')
+        else if (optopt == 'p' || optopt == 'c' || optopt == 'b' || optopt == 'i' || optopt == 'r' || optopt == 'd' || optopt == 'm' || optopt == 'a')
           fprintf(stderr, "Option -%c requires an argument.\n", optopt);
         else if (isprint(optopt))
           fprintf(stderr, "Unknown option -%c.\n", optopt);

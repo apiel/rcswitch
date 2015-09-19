@@ -106,7 +106,6 @@ void digitalWrite(int pin, int value)
 
 int digitalRead(int pin)
 {
-  
   string line;
   
   ifstream myfile(getPathGpioData(pin));
@@ -115,7 +114,7 @@ int digitalRead(int pin)
     getline (myfile,line);
     myfile.close();
   }
-
+  
   return atoi(line.c_str());
 }
 
