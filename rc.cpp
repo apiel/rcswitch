@@ -73,9 +73,9 @@ int main(int argc, char *argv[]) {
     switch (c) {
       case 'h':
 	    run = false;
-        cout << argv[0] << " -x [rx|tx] -c [code] -b [bit] -p [protocol] -r [repetition] -d [delay] -i [gpio]" << endl << endl;
+        cout << argv[0] << " [-x rx|tx] [-c code] [-b bit] [-p protocol] [-r repetition] [-d delay] [-i gpio]" << endl << endl;
         cout << "rx: receive mode (default)" << endl;
-        cout << "tx: transmit mode. This mode can get extra parameters -c [code] -b [bit] -p [protocol] -r [repetition] -d [delay]." << endl;
+        cout << "tx: transmit mode. This mode can get extra parameters [-c code] [-b bit] [-p protocol] [-r repetition] [-d delay]." << endl;
         cout << "code: code to transmit eg.: " << code << endl;
         cout << "bit: length of the code to transmit or 0 for binary code, default: " << bit << endl;
         cout << "protocol: protocol used to transmit (1, 2 or 3), default: " << protocol << endl;
