@@ -11,6 +11,7 @@
 //#include <sys/inotify.h>
 //#include <unistd.h> // usleep
 
+
 using namespace std;
 
 bool loopInterrupt = false;
@@ -175,3 +176,17 @@ unsigned long micros(void)
     
     return micros; // should be the time in microsecond
 }
+
+
+void* memcpy_P( void* dest, const void* src, int count )
+{
+	memcpy(dest, src, count);
+}
+
+long double abs (long double x)
+{
+	return x < 0 ? -x : x;
+}
+
+
+

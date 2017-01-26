@@ -18,3 +18,9 @@ void detachInterrupt(int pin);
 unsigned long micros(void);
 void setPathGpioData(char * path);
 void setPathGpioPinMode(char * path);
+
+
+
+void* memcpy_P( void* dest, const void* src, int count );
+long double abs (long double x);
+
