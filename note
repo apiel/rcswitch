@@ -1,4 +1,0 @@
-g++ -o  test test.cpp RCSwitch.cpp WProgram.cpp -std=c++0x -pthread
-
-g++ -o  rc rc.cpp RCSwitch.cpp WProgram.cpp -std=c++0x -pthread
-

@@ -1,2 +1,0 @@
-/home/alexandre/dev/vocore/OpenWrt-Toolchain-ramips-for-mipsel_24kec+dsp-gcc-4.8-linaro_uClibc-0.9.33.2/toolchain-mipsel_24kec+dsp_gcc-4.8-linaro_uClibc-0.9.33.2/bin/mipsel-openwrt-linux-g++ -o  vorc rc.cpp RCSwitch.cpp WProgram.cpp -std=c++0x -pthread -ldl
-
